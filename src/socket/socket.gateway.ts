@@ -2,39 +2,23 @@ import {
   WebSocketGateway,
   SubscribeMessage,
   MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { SocketService } from './socket.service';
 import { CreateSocketDto } from './dto/create-socket.dto';
-import { UpdateSocketDto } from './dto/update-socket.dto';
-import { log } from 'console';
+import { Socket } from 'net';
 
 @WebSocketGateway({ cors: true, transports: ['websocket'] })
 export class SocketGateway {
   constructor(private readonly socketService: SocketService) {}
 
   @SubscribeMessage('createSocket')
-  create(@MessageBody() createSocketDto: CreateSocketDto) {
-    log('createSocketDto', createSocketDto);
+  create(
+    @MessageBody() createSocketDto: CreateSocketDto,
+    @ConnectedSocket() client: Socket,
+  ) {
+    console.log('createSocketDto', createSocketDto);
+    setTimeout(() => client.emit('play', '小丑牌，启动！'), 3000);
     return this.socketService.create(createSocketDto);
-  }
-
-  @SubscribeMessage('findAllSocket')
-  findAll() {
-    return this.socketService.findAll();
-  }
-
-  @SubscribeMessage('findOneSocket')
-  findOne(@MessageBody() id: number) {
-    return this.socketService.findOne(id);
-  }
-
-  @SubscribeMessage('updateSocket')
-  update(@MessageBody() updateSocketDto: UpdateSocketDto) {
-    return this.socketService.update(updateSocketDto.id, updateSocketDto);
-  }
-
-  @SubscribeMessage('removeSocket')
-  remove(@MessageBody() id: number) {
-    return this.socketService.remove(id);
   }
 }
