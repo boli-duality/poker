@@ -1,8 +1,4 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class AppService {
-  getHello(): string {
-    return '小丑牌，启动！';
-  }
-}
+export class AppService {}

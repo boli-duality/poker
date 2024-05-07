@@ -1,0 +1,1 @@
+import{_ as o,o as t,c as s,D as c}from"./index-C_9VU0gF.js";const e={},a={class:"flex"};function n(_,f){return t(),s("div",a," 暂未开放 ")}typeof c=="function"&&c(e);const d=o(e,[["render",n],["__scopeId","data-v-62c04fba"]]);export{d as default};
