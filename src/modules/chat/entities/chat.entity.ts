@@ -1,9 +1,7 @@
 import { ChatDto } from '../dto/chat.dto';
 
-class Chat {
+export class Chat {
   room = {
     world: [] as ChatDto[],
   };
 }
-
-export const chat = new Chat();

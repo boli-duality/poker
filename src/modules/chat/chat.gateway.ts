@@ -3,31 +3,30 @@ import {
   SubscribeMessage,
   MessageBody,
   ConnectedSocket,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { ConnectChatDto } from './dto/connect-chat.dto';
 import { ChatDto } from './dto/chat.dto';
-import { Socket } from 'net';
-import { chat } from './entities/chat.entity';
+import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({ cors: true, transports: ['websocket'] })
 export class ChatGateway {
+  @WebSocketServer()
+  private readonly server: Server;
+
   constructor(private readonly chatService: ChatService) {}
 
   @SubscribeMessage('connectChat')
-  connectChat(@MessageBody() connectChatDto: ConnectChatDto) {
-    return this.chatService.connectChat(connectChatDto);
+  connectChat(
+    @MessageBody() connectChatDto: ConnectChatDto,
+    @ConnectedSocket() client: Socket,
+  ) {
+    return this.chatService.connectChat(connectChatDto, client);
   }
 
   @SubscribeMessage('chat')
   chat(@MessageBody() chatDto: ChatDto, @ConnectedSocket() client: Socket) {
-    const room = chat.room[chatDto.room];
-    if (!room) return this.chatService.chat(chatDto);
-    if (chatDto.text) {
-      room.push(chatDto);
-      client.emit(`chat-${chatDto.room}`, chatDto);
-    }
-
-    return this.chatService.chat(chatDto);
+    return this.chatService.chat(chatDto, client, this.server);
   }
 }

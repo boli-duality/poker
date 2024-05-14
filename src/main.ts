@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { TransformInterceptor } from './interceptors/transform/transform.interceptor';
+// import { TransformInterceptor } from './interceptors/transform/transform.interceptor';
 import { HttpExceptionFilter } from './filters/http-exception/http-exception.filter';
 
 async function bootstrap() {
@@ -8,7 +8,7 @@ async function bootstrap() {
 
   app.enableCors();
 
-  app.useGlobalInterceptors(new TransformInterceptor());
+  // app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(3000);
